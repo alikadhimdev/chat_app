@@ -1,10 +1,14 @@
+import 'package:chat_app/screens/chat_scree,.dart';
+import 'package:chat_app/screens/login_screen.dart';
+import 'package:chat_app/screens/registration_screen.dart';
+import 'package:chat_app/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:provider/provider.dart";
 import 'package:google_fonts/google_fonts.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode themeMode = ThemeMode.system;
+  ThemeMode themeMode = ThemeMode.light;
 
   void toggleTheme() {
     themeMode = themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
@@ -50,6 +54,7 @@ class MyApp extends StatelessWidget {
           headlineLarge: GoogleFonts.cairo(
             fontSize: 30,
             fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
           ),
           headlineMedium: GoogleFonts.cairo(
             fontSize: 24,
@@ -88,31 +93,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
 
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("تطبيق المراسلة"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.read<ThemeProvider>().toggleTheme();
-            },
-            icon: context.watch<ThemeProvider>().themeMode == ThemeMode.light
-                ? const Icon(Icons.nightlight_sharp, size: 16)
-                : const Icon(Icons.sunny, size: 16),
-          ),
-        ],
-      ),
-      body: Center(),
+      home: ChatScree(),
     );
   }
 }
