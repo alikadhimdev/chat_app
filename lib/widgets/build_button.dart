@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class BuildButton extends StatelessWidget {
   final String title;
   final Color bgColor;
-  final Function handleClick;
+  final VoidCallback handleClick;
 
   const BuildButton({
     super.key,
@@ -21,7 +21,7 @@ class BuildButton extends StatelessWidget {
       child: MaterialButton(
         height: 50,
 
-        onPressed: () => handleClick(),
+        onPressed: handleClick,
         child: Text(
           title,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

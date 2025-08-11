@@ -1,9 +1,8 @@
-import 'package:chat_app/widgets/build_inputFiled.dart';
 import 'package:flutter/material.dart';
 
 class ChatScree extends StatefulWidget {
   const ChatScree({super.key});
-
+  static const screenRoute = "/chat";
   @override
   State<ChatScree> createState() => _ChatScreeState();
 }

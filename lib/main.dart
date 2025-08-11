@@ -1,4 +1,4 @@
-import 'package:chat_app/screens/chat_scree,.dart';
+import 'package:chat_app/screens/chat_scree.dart';
 import 'package:chat_app/screens/login_screen.dart';
 import 'package:chat_app/screens/registration_screen.dart';
 import 'package:chat_app/screens/welcome_screen.dart';
@@ -93,7 +93,13 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
 
-      home: ChatScree(),
+      initialRoute: WelcomeScreen.screenRoute,
+      routes: {
+        WelcomeScreen.screenRoute: (context) => const WelcomeScreen(),
+        LoginScreen.screenRoute: (context) => const LoginScreen(),
+        RegistrationScreen.screenRoute: (context) => const RegistrationScreen(),
+        ChatScree.screenRoute: (context) => const ChatScree(),
+      },
     );
   }
 }
