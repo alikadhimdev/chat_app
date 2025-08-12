@@ -1,29 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ChatScree extends StatefulWidget {
-  const ChatScree({super.key});
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({super.key});
   static const screenRoute = "/chat";
   @override
-  State<ChatScree> createState() => _ChatScreeState();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreeState extends State<ChatScree> {
+class _ChatScreenState extends State<ChatScreen> {
+  final _auth = FirebaseAuth.instance;
+  late User signinUser;
+  final _fireStore = FirebaseFirestore.instance;
+  String messageText = "";
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        signinUser = user;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void handleSendMessage() async {
+    try {
+      await _fireStore.collection("messages").add({
+        "text": messageText,
+        "sender": signinUser.email,
+        "time": DateTime.now().toString(),
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange[700],
         title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset("images/logo.png", width: 30, height: 30),
+            Image.asset("images/logo.png", width: 25, height: 25),
             SizedBox(width: 10),
-            Text("تطبيق المراسلة"),
+            Text(
+              "تطبيق المراسلة",
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.white),
+            ),
           ],
         ),
         actions: [
           IconButton(
             onPressed: () {
-              print("close");
+              _auth.signOut();
+              Navigator.pop(context);
             },
             icon: Icon(Icons.close),
           ),
@@ -44,7 +88,9 @@ class _ChatScreeState extends State<ChatScree> {
                 children: [
                   Expanded(
                     child: TextField(
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        messageText = value;
+                      },
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(
                           vertical: 10,
@@ -57,7 +103,7 @@ class _ChatScreeState extends State<ChatScree> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: handleSendMessage,
                     child: Text(
                       "ارسال",
                       style: TextStyle(

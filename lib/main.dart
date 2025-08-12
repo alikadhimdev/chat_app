@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:provider/provider.dart";
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+import 'dart:io' show Platform;
 
 class ThemeProvider extends ChangeNotifier {
   ThemeMode themeMode = ThemeMode.light;
@@ -16,7 +19,19 @@ class ThemeProvider extends ChangeNotifier {
   }
 }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    if (Platform.isLinux) {
+      debugPrint('Firebase غير مدعوم على Linux، سيتم تعطيله');
+    } else {
+      await Firebase.initializeApp();
+    }
+  } catch (e) {
+    debugPrint('خطأ في تهيئة Firebase: $e');
+  }
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
@@ -52,21 +67,21 @@ class MyApp extends StatelessWidget {
         ),
         textTheme: GoogleFonts.cairoTextTheme().copyWith(
           headlineLarge: GoogleFonts.cairo(
-            fontSize: 30,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Theme.of(context).colorScheme.primary,
           ),
           headlineMedium: GoogleFonts.cairo(
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
           headlineSmall: GoogleFonts.cairo(
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
-          bodyLarge: GoogleFonts.cairo(fontSize: 20),
-          bodyMedium: GoogleFonts.cairo(fontSize: 16),
-          bodySmall: GoogleFonts.cairo(fontSize: 14),
+          bodyLarge: GoogleFonts.cairo(fontSize: 14),
+          bodyMedium: GoogleFonts.cairo(fontSize: 12),
+          bodySmall: GoogleFonts.cairo(fontSize: 10),
         ),
         scaffoldBackgroundColor: Colors.white, // أو استخدم colorScheme.surface
         appBarTheme: AppBarTheme(
@@ -76,7 +91,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      themeMode: context.watch<ThemeProvider>().themeMode, // غيرنا للوضع الفاتح
+      themeMode: ThemeMode.system, // غيرنا للوضع الفاتح
       darkTheme: ThemeData.dark().copyWith(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blue,
@@ -98,7 +113,7 @@ class MyApp extends StatelessWidget {
         WelcomeScreen.screenRoute: (context) => const WelcomeScreen(),
         LoginScreen.screenRoute: (context) => const LoginScreen(),
         RegistrationScreen.screenRoute: (context) => const RegistrationScreen(),
-        ChatScree.screenRoute: (context) => const ChatScree(),
+        ChatScreen.screenRoute: (context) => const ChatScreen(),
       },
     );
   }
