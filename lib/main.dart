@@ -2,6 +2,7 @@ import 'package:chat_app/screens/chat_scree.dart';
 import 'package:chat_app/screens/login_screen.dart';
 import 'package:chat_app/screens/registration_screen.dart';
 import 'package:chat_app/screens/welcome_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:provider/provider.dart";
@@ -41,7 +42,9 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final _auth = FirebaseAuth.instance;
 
   // This widget is the root of your application.
   @override
@@ -108,7 +111,9 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
 
-      initialRoute: WelcomeScreen.screenRoute,
+      initialRoute: _auth.currentUser != null
+          ? ChatScreen.screenRoute
+          : WelcomeScreen.screenRoute,
       routes: {
         WelcomeScreen.screenRoute: (context) => const WelcomeScreen(),
         LoginScreen.screenRoute: (context) => const LoginScreen(),
